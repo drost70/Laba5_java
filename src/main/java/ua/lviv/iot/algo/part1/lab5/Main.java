@@ -6,29 +6,24 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Main {
+public class Word {
 
     public static Set<String> findWordsInQuestionSentences(String text, int length) {
-        String questionRegex = "\\?\\s*(\\b\\w+\\b\\s*)+";
+        String questionRegex = "\\b\\w{" + length + "}\\b(?=[^?!.]*\\?)";
 
         Set<String> words = new HashSet<>();
         Pattern questionPattern = Pattern.compile(questionRegex);
         Matcher matcher = questionPattern.matcher(text);
         while (matcher.find()) {
-            String sentence = matcher.group();
-            String[] sentenceWords = sentence.split("\\s+");
-            for (String word : sentenceWords) {
-                if (word.length() == length) {
-                    words.add(word);
-                }
-            }
+            String word = matcher.group();
+            words.add(word);
         }
 
         return words;
     }
 
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the text: ");
         String text = scanner.nextLine();
@@ -36,11 +31,12 @@ public class Main {
         int length = scanner.nextInt();
         scanner.close();
 
-        Set<String> words = findWordsInQuestionSentences(text, length);
+        Word word = new Word();
+        Set<String> words = word.findWordsInQuestionSentences(text, length);
 
         System.out.println("Words of the given length found in question sentences:");
-        for (String word : words) {
-            System.out.println(word);
+        for (String w : words) {
+            System.out.println(w);
         }
     }
 }
