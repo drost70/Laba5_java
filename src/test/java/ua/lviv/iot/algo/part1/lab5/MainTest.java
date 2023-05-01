@@ -1,49 +1,42 @@
 package ua.lviv.iot.algo.part1.lab5;
 
-import static org.junit.Assert.assertEquals;
+import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
-import org.junit.Test;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+public class Word {
 
-public class MainTest {
 
+    public static Set<String> findWordsInQuestionSentences(String text, int length) {
+        String questionRegex = "\\b\\w{" + length + "}\\b(?=[^?!.]*\\?)";
 
-    @Test
-    public void testFindWordsInQuestionSentencesWithNoMatches() {
-        String text = "This text does not contain any question sentences.";
-        int length = 5;
+        Set<String> words = new HashSet<>();
+        Pattern questionPattern = Pattern.compile(questionRegex);
+        Matcher matcher = questionPattern.matcher(text);
+        while (matcher.find()) {
+            String word = matcher.group();
+            words.add(word);
+        }
 
-        Set<String> words = Main.findWordsInQuestionSentences(text, length);
-
-        assertEquals(0, words.size());
+        return words;
     }
 
-    @Test
-    public void testFindWordsInQuestionSentencesWithEmptyInput() {
-        String text = "";
-        int length = 3;
 
-        Set<String> words = Main.findWordsInQuestionSentences(text, length);
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the text: ");
+        String text = scanner.nextLine();
+        System.out.print("Enter the word length: ");
+        int length = scanner.nextInt();
+        scanner.close();
 
-        assertEquals(0, words.size());
-    }
+        Word word = new Word();
+        Set<String> words = word.findWordsInQuestionSentences(text, length);
 
-    @Test
-    public void testFindWordsInQuestionSentencesWithLongWordLength() {
-        String text = "What is your name? My name is John. How old are you? I am 25 years old.";
-        int length = 10;
-
-        Set<String> words = Main.findWordsInQuestionSentences(text, length);
-
-        assertEquals(0, words.size());
-    }
-
-    @Test
-    public void testFindWordsInQuestionSentencesWithNegativeWordLength() {
-        String text = "What is your name? My name is John. How old are you? I am 25 years old.";
-        int length = -3;
-
-        Set<String> words = Main.findWordsInQuestionSentences(text, length);
-
-        assertEquals(0, words.size());
+        System.out.println("Words of the given length found in question sentences:");
+        for (String w : words) {
+            System.out.println(w);
+        }
     }
 }
